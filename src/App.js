@@ -1,11 +1,17 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import GetDate from './getDate.js';
+import DeleteExpense from './DeleteExpense.js';
+import AddExpenses from './AddExpenses.js';
+import UndoDelete from './UndoDelete.js';
 
 function App() {
   const [expenses, setExpenses] = useState([]);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [deleteItem, setDeleteItem] = useState(null);
+  const [undoTimeout, setUndoTimeout] = useState(null);
+
 
   useEffect(() => {
     const savedExpenses = localStorage.getItem("expenses");
@@ -17,28 +23,6 @@ function App() {
   useEffect(() => {
     localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
-
-  const addExpenses = (e) => {
-
-    e.preventDefault();
-
-    if(!description.trim()){
-      alert("Description cannot be empty!");
-      return;
-    }
-
-    const amountValue = parseFloat(amount);
-    if(isNaN(amountValue) || amountValue <= 0) {
-      alert("Please enter a valid positive number!");
-      setAmount("")
-      return;
-    }
-
-    const newExpense = {description, amount:amountValue.toFixed(2),id:Date.now()}
-    setExpenses([...expenses, newExpense])
-    setDescription("");
-    setAmount("");
-  };
 
   return (
     <>
@@ -59,15 +43,15 @@ function App() {
               placeholder='Enter amount'
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-             />
+            />
             <input
               type='text'
               placeholder='Enter description'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-             />
+            />
 
-            <button className='btn' type='button' onClick={addExpenses}>Add Expense</button>
+            <button className='btn' type='button' onClick={() => AddExpenses(amount, setAmount, description, setDescription, expenses, setExpenses)}>Add Expense</button>
           </form>
         </div>
         <div className='expenses'>
@@ -76,11 +60,17 @@ function App() {
             {expenses.map((expense) => (
               <li key={expense.id}>
                 {expense.description}: ${expense.amount} <GetDate />
-                
+                <button onClick={() => DeleteExpense(expense.id, expenses, setExpenses,setDeleteItem,undoTimeout, setUndoTimeout)}>Delete Expense</button>
               </li>
             ))}
           </ul>
         </div>
+        {deleteItem && (
+          <div>
+            <p>Deleted "{deleteItem.description}".</p>
+            <button onClick={()=>UndoDelete(deleteItem, setExpenses,setDeleteItem,undoTimeout, setUndoTimeout)}>Undo</button>
+          </div>
+        )}
       </div>
     </>
   );
