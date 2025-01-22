@@ -4,6 +4,7 @@ import GetDate from './getDate.js';
 import DeleteExpense from './DeleteExpense.js';
 import AddExpenses from './AddExpenses.js';
 import UndoDelete from './UndoDelete.js';
+import ConvertAmount from './ConvertAmount.js';
 
 function App() {
   const [expenses, setExpenses] = useState([]);
@@ -11,7 +12,16 @@ function App() {
   const [amount, setAmount] = useState("");
   const [deleteItem, setDeleteItem] = useState(null);
   const [undoTimeout, setUndoTimeout] = useState(null);
+  const [currency, setCurrency] = useState("INR");
+  const [conversionRates, setConversionRates] = useState({});
 
+  const currencySymbols = {
+    USD: "$",
+    EUR: "€",
+    INR: "₹",
+  };
+
+  const allowedCurrencies = Object.keys(currencySymbols);
 
   useEffect(() => {
     const savedExpenses = localStorage.getItem("expenses");
@@ -24,6 +34,20 @@ function App() {
     localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
 
+  useEffect(() => {
+    fetch(`https://v6.exchangerate-api.com/v6/48ccbc3eb045c915cb745bc4/latest/USD`)
+    .then((response) => response.json())
+    .then((data) => {
+      const { conversion_rates } = data;
+      const filteredRates = {};
+      allowedCurrencies.forEach((curr) => {
+        filteredRates[curr] = conversion_rates[curr];
+      });
+      setConversionRates(filteredRates);
+    })
+    .catch((error) => console.error("Error fetching conversion rates:", error));
+  }, [allowedCurrencies])
+
   return (
     <>
       <div className='app'>
@@ -32,12 +56,12 @@ function App() {
         </div>
         <div className='expense-input'>
           <form>
-            <select name="selectedCurrency" defaultValue="USD">
-              <option value="USD">USD</option>
-              <option value="INR">INR</option>
-              <option value="EUR">EUR</option>
+            <label htmlFor='currency'>Currency: </label>
+            <select id="currency" value={currency} onChange={(e) => setCurrency(e.target.value)}>
+              {allowedCurrencies.map((curr) => (
+                <option key = {curr} value={curr}>{curr}</option>
+              ))}
             </select>
-
             <input
               type='number'
               placeholder='Enter amount'
@@ -50,7 +74,6 @@ function App() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-
             <button className='btn' type='button' onClick={() => AddExpenses(amount, setAmount, description, setDescription, expenses, setExpenses)}>Add Expense</button>
           </form>
         </div>
@@ -59,8 +82,8 @@ function App() {
           <ul>
             {expenses.map((expense) => (
               <li key={expense.id}>
-                {expense.description}: ${expense.amount} <GetDate />
-                <button onClick={() => DeleteExpense(expense.id, expenses, setExpenses,setDeleteItem,undoTimeout, setUndoTimeout)}>Delete Expense</button>
+                {expense.description}: {currencySymbols[currency]} {ConvertAmount(expense.amount, conversionRates, currency)} <GetDate />
+                <button onClick={() => DeleteExpense(expense.id, expenses, setExpenses, setDeleteItem, undoTimeout, setUndoTimeout)}>Delete Expense</button>
               </li>
             ))}
           </ul>
@@ -68,7 +91,7 @@ function App() {
         {deleteItem && (
           <div>
             <p>Deleted "{deleteItem.description}".</p>
-            <button onClick={()=>UndoDelete(deleteItem, setExpenses,setDeleteItem,undoTimeout, setUndoTimeout)}>Undo</button>
+            <button onClick={() => UndoDelete(deleteItem, setExpenses, setDeleteItem, undoTimeout, setUndoTimeout)}>Undo</button>
           </div>
         )}
       </div>
