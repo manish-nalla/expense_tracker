@@ -5,6 +5,7 @@ import DeleteExpense from './DeleteExpense.js';
 import AddExpenses from './AddExpenses.js';
 import UndoDelete from './UndoDelete.js';
 import ConvertAmount from './ConvertAmount.js';
+import InputForm from './InputForm.jsx';
 
 function App() {
   const [expenses, setExpenses] = useState([]);
@@ -23,6 +24,9 @@ function App() {
 
   const allowedCurrencies = Object.keys(currencySymbols);
 
+  const formData = {currency, allowedCurrencies, amount, description, expenses};
+  const formHandlers = {setCurrency, setAmount, setDescription, setExpenses, AddExpenses};
+
   useEffect(() => {
     const savedExpenses = localStorage.getItem("expenses");
     if (savedExpenses) {
@@ -36,16 +40,16 @@ function App() {
 
   useEffect(() => {
     fetch(`https://v6.exchangerate-api.com/v6/48ccbc3eb045c915cb745bc4/latest/USD`)
-    .then((response) => response.json())
-    .then((data) => {
-      const { conversion_rates } = data;
-      const filteredRates = {};
-      allowedCurrencies.forEach((curr) => {
-        filteredRates[curr] = conversion_rates[curr];
-      });
-      setConversionRates(filteredRates);
-    })
-    .catch((error) => console.error("Error fetching conversion rates:", error));
+      .then((response) => response.json())
+      .then((data) => {
+        const { conversion_rates } = data;
+        const filteredRates = {};
+        allowedCurrencies.forEach((curr) => {
+          filteredRates[curr] = conversion_rates[curr];
+        });
+        setConversionRates(filteredRates);
+      })
+      .catch((error) => console.error("Error fetching conversion rates:", error));
   }, [allowedCurrencies])
 
   return (
@@ -55,27 +59,7 @@ function App() {
           <h1>Expense Tracker</h1>
         </div>
         <div className='expense-input'>
-          <form>
-            <label htmlFor='currency'>Currency: </label>
-            <select id="currency" value={currency} onChange={(e) => setCurrency(e.target.value)}>
-              {allowedCurrencies.map((curr) => (
-                <option key = {curr} value={curr}>{curr}</option>
-              ))}
-            </select>
-            <input
-              type='number'
-              placeholder='Enter amount'
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
-            <input
-              type='text'
-              placeholder='Enter description'
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <button className='btn' type='button' onClick={() => AddExpenses(amount, setAmount, description, setDescription, expenses, setExpenses)}>Add Expense</button>
-          </form>
+          <InputForm formData = {formData} formHandlers = {formHandlers}/>
         </div>
         <div className='expenses'>
           <h2>Expenses</h2>
@@ -98,5 +82,4 @@ function App() {
     </>
   );
 }
-
 export default App;
