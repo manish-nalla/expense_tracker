@@ -4,7 +4,6 @@ import GetDate from './getDate.js';
 import DeleteExpense from './DeleteExpense.js';
 import AddExpenses from './AddExpenses.js';
 import UndoDelete from './UndoDelete.js';
-import ConvertAmount from './ConvertAmount.js';
 import InputForm from './InputForm.jsx';
 
 function App() {
@@ -14,7 +13,6 @@ function App() {
   const [deleteItem, setDeleteItem] = useState(null);
   const [undoTimeout, setUndoTimeout] = useState(null);
   const [currency, setCurrency] = useState("INR");
-  const [conversionRates, setConversionRates] = useState({});
 
   const currencySymbols = {
     USD: "$",
@@ -38,20 +36,6 @@ function App() {
     localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
 
-  useEffect(() => {
-    fetch(`https://v6.exchangerate-api.com/v6/48ccbc3eb045c915cb745bc4/latest/USD`)
-      .then((response) => response.json())
-      .then((data) => {
-        const { conversion_rates } = data;
-        const filteredRates = {};
-        allowedCurrencies.forEach((curr) => {
-          filteredRates[curr] = conversion_rates[curr];
-        });
-        setConversionRates(filteredRates);
-      })
-      .catch((error) => console.error("Error fetching conversion rates:", error));
-  }, [allowedCurrencies])
-
   return (
     <>
       <div className='app'>
@@ -66,7 +50,7 @@ function App() {
           <ul>
             {expenses.map((expense) => (
               <li key={expense.id}>
-                {expense.description}: {currencySymbols[currency]} {ConvertAmount(expense.amount, conversionRates, currency)} <GetDate />
+                {expense.description}: {expense.amount} <GetDate />
                 <button onClick={() => DeleteExpense(expense.id, expenses, setExpenses, setDeleteItem, undoTimeout, setUndoTimeout)}>Delete Expense</button>
               </li>
             ))}
