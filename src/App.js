@@ -72,7 +72,8 @@ function App() {
             )}
           </div>
           : 
-          (<Login onLogin = {handleLogin}/>)}
+          (<Login onLogin = {handleLogin}/>)
+          }
       </div>
     </>
   );
