@@ -1,0 +1,47 @@
+body{
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: grey;
+}
+
+.container{
+    text-align: center;
+    padding: 30px;
+    border-radius: 20px;
+    background-color: rgb(161, 161, 161);
+    box-shadow: 10px 10px 10px black;
+}
+
+.heading{
+    font-size: 2rem;
+    font-family: "Noto Serif", serif;
+}
+
+.input{
+    width: 75%;
+    height: 40px;
+    border-radius: 20px;
+    border: 0.5px solid rgb(180, 180, 180);
+    padding: 0px 20px;
+}
+
+.btn-login{
+    width: 20%;
+    height: 30px;
+    margin: 10px 0px 0px 0px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    background-color: rgb(255, 255, 255);
+}
+
+.btn-login:hover{
+    background-color: rgb(92, 92, 92);
+    box-shadow: 4px 4px 4px rgb(39, 49, 39);
+    color: whitesmoke;
+}
