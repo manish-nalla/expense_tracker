@@ -38,7 +38,7 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem(`expenses_${currentUser}`, JSON.stringify(expenses));
-  }, [expenses,currentUser]);
+  }, [expenses, currentUser]);
 
   return (
     <>
@@ -58,22 +58,22 @@ function App() {
               <ul>
                 {expenses.map((expense) => (
                   <li key={expense.id}>
-                    {expense.description}: {expense.amount} <GetDate />
+                    <span>{expense.description}</span><span>{expense.amount}</span> <GetDate />
                     <button onClick={() => DeleteExpense(expense.id, expenses, setExpenses, setDeleteItem, undoTimeout, setUndoTimeout)}>Delete Expense</button>
                   </li>
                 ))}
               </ul>
             </div>
             {deleteItem && (
-              <div>
+              <div className='delete-message'>
                 <p>Deleted "{deleteItem.description}".</p>
                 <button onClick={() => UndoDelete(deleteItem, setExpenses, setDeleteItem, undoTimeout, setUndoTimeout)}>Undo</button>
               </div>
             )}
           </div>
-          : 
-          (<Login onLogin = {handleLogin}/>)
-          }
+          :
+          (<Login onLogin={handleLogin} />)
+        }
       </div>
     </>
   );

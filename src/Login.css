@@ -1,4 +1,4 @@
-body{
+body {
     margin: 0;
     height: 100vh;
     display: flex;
@@ -7,7 +7,7 @@ body{
     background-color: grey;
 }
 
-.container{
+.container {
     text-align: center;
     padding: 30px;
     border-radius: 20px;
@@ -15,12 +15,12 @@ body{
     box-shadow: 10px 10px 10px black;
 }
 
-.heading{
+.heading {
     font-size: 2rem;
     font-family: "Noto Serif", serif;
 }
 
-.input{
+.input {
     width: 75%;
     height: 40px;
     border-radius: 20px;
@@ -28,7 +28,7 @@ body{
     padding: 0px 20px;
 }
 
-.btn-login{
+.btn-login {
     width: 20%;
     height: 30px;
     margin: 10px 0px 0px 0px;
@@ -40,7 +40,7 @@ body{
     background-color: rgb(255, 255, 255);
 }
 
-.btn-login:hover{
+.btn-login:hover {
     background-color: rgb(92, 92, 92);
     box-shadow: 4px 4px 4px rgb(39, 49, 39);
     color: whitesmoke;
