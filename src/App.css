@@ -88,11 +88,22 @@ body {
   font-size: 1.2rem;
 }
 
-.expenses li span {
+.expenses li span.expense-display {
   font-size: 1.9rem;
   padding: 10px;
   font-weight: bold;
-  color: rgb(139, 6, 6);
+  color: rgb(95, 127, 133);
+}
+
+.getdate {
+  display: flex;
+  flex-direction: column;
+  background-color: #e0e0e0;
+  margin: 0 15px;
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .expenses button {
@@ -110,6 +121,16 @@ body {
   background-color: #c0392b;
 }
 
+.total-container {
+  background-color: #fff;
+  color: #444;
+  padding: 0 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+}
+
 .delete-message {
   padding: 10px;
   background-color: #f9f9f9;
@@ -120,6 +141,7 @@ body {
 
 .delete-message p {
   margin-bottom: 20px;
+
 }
 
 .delete-message button {
@@ -144,6 +166,7 @@ body {
 
   .heading h1 {
     font-size: 1.2rem;
+    padding: 10px;
   }
 
   .expenses li {

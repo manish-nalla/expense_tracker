@@ -58,15 +58,18 @@ function App() {
               <ul>
                 {expenses.map((expense) => (
                   <li key={expense.id}>
-                    <span>{expense.description}</span><span>{expense.amount}</span> <GetDate />
+                    <span className='expense-display'>{expense.description}</span><span className='expense-display'>{expense.amount}</span> <GetDate />
                     <button onClick={() => DeleteExpense(expense.id, expenses, setExpenses, setDeleteItem, undoTimeout, setUndoTimeout)}>Delete Expense</button>
                   </li>
                 ))}
               </ul>
+              <div className='total-container'>
+                <h3>Total Expenses: {expenses.reduce((total, expense) => total + parseFloat(expense.amount || 0), 0)}</h3>
+              </div>
             </div>
             {deleteItem && (
               <div className='delete-message'>
-                <p>Deleted "{deleteItem.description}".</p>
+                <p className='delete-item'>Deleted "{deleteItem.description}".</p>
                 <button onClick={() => UndoDelete(deleteItem, setExpenses, setDeleteItem, undoTimeout, setUndoTimeout)}>Undo</button>
               </div>
             )}
